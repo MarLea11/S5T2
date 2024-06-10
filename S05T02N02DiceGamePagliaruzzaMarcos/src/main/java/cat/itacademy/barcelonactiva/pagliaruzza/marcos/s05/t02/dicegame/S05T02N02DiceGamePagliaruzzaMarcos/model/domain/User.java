@@ -15,7 +15,8 @@ import java.util.Collection;
 import java.util.List;
 
 
-@Document(collection = "users")
+@Entity
+@Table(name = "user")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,14 +24,23 @@ import java.util.List;
 public class User implements UserDetails {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
     private String username;
+
+    @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
     @Enumerated(EnumType.STRING)
     private Role role;
-    @Builder.Default
-    private List<String> players = new ArrayList<>();
+
+    //@Builder.Default
+    //private List<String> players = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -15,11 +15,11 @@ import java.util.List;
 @AllArgsConstructor
 public class UserDTO {
 
-    private String id;
+    private Long id;
     private String username;
     private String password;
     private String email;
     private Role role;
-    private List<String> players = new ArrayList<>();
+    //private List<String> players = new ArrayList<>();
 
 }
