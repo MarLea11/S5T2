@@ -4,6 +4,7 @@ import cat.itacademy.barcelonactiva.pagliaruzza.marcos.s05.t02.dicegame.S05T02N0
 import cat.itacademy.barcelonactiva.pagliaruzza.marcos.s05.t02.dicegame.S05T02N02DiceGamePagliaruzzaMarcos.model.exceptions.PlayerNotFoundException;
 import cat.itacademy.barcelonactiva.pagliaruzza.marcos.s05.t02.dicegame.S05T02N02DiceGamePagliaruzzaMarcos.model.services.GameService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/players")
+@Tag(name = "Games Dice Game Controller", description = "Endpoints for games management")
 @RequiredArgsConstructor
 public class GameController {
     @Autowired
@@ -34,7 +36,6 @@ public class GameController {
         return responseEntity;
     }
 
-    // TODO: delete message successfully
     @Operation(summary = "Delete games", description = "Deletes all the games played by a specific player.")
     @DeleteMapping("/{id}/games")
     public ResponseEntity<String> deleteGame(@PathVariable String id) {

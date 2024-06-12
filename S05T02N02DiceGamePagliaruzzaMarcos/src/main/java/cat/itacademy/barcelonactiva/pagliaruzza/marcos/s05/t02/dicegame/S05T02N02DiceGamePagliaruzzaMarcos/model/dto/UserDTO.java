@@ -20,6 +20,5 @@ public class UserDTO {
     private String password;
     private String email;
     private Role role;
-    //private List<String> players = new ArrayList<>();
 
 }

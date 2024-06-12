@@ -1,6 +1,5 @@
 package cat.itacademy.barcelonactiva.pagliaruzza.marcos.s05.t02.dicegame.S05T02N02DiceGamePagliaruzzaMarcos.model.exceptions;
 
-/*
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -54,4 +53,3 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 }
-*/

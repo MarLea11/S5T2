@@ -37,8 +37,12 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
+	testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.0")
+	testImplementation ("au.com.dius.pact.consumer:junit5:4.3.0")
+	testImplementation("org.mockito:mockito-core:4.0.0")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	runtimeOnly("com.mysql:mysql-connector-j")
+
 }
 
 tasks.withType<Test> {

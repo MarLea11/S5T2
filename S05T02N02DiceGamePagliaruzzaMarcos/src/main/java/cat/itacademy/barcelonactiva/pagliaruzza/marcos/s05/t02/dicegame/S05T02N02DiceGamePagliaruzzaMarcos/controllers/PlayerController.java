@@ -6,6 +6,7 @@ import cat.itacademy.barcelonactiva.pagliaruzza.marcos.s05.t02.dicegame.S05T02N0
 import cat.itacademy.barcelonactiva.pagliaruzza.marcos.s05.t02.dicegame.S05T02N02DiceGamePagliaruzzaMarcos.model.exceptions.RankedPlayerNotFoundException;
 import cat.itacademy.barcelonactiva.pagliaruzza.marcos.s05.t02.dicegame.S05T02N02DiceGamePagliaruzzaMarcos.model.services.PlayerService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,16 +16,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/players")
+@Tag(name = "Players Dice Game Controller", description = "Endpoints for players management")
 public class PlayerController {
     @Autowired
     PlayerService playerService;
 
     @Operation(summary = "Creates a new player", description = "Creates a new player for a specific user.")
     @PostMapping
-    public ResponseEntity<PlayerDTO> addPlayer(@RequestBody PlayerDTO playerDTO, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<PlayerDTO> addPlayer(@RequestBody PlayerDTO playerDTO) {
         ResponseEntity<PlayerDTO> responseEntity;
-        //String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        //String username = jwtTokenUtil.getUsernameFromToken(token.substring(7));
         try{
            PlayerDTO newPlayerDTO = playerService.addPlayer(playerDTO.getName());
            responseEntity = new ResponseEntity<>(newPlayerDTO, HttpStatus.CREATED);
@@ -62,7 +62,6 @@ public class PlayerController {
         return responseEntity;
     }
 
-    //TODO: exception control empty players list
     @Operation(summary = "Get all players by win rate", description = "Retrieves a list of players sorted by win rate.")
     @GetMapping("/ranking")
     public ResponseEntity<Double> getAverageWinRate() {

@@ -28,7 +28,6 @@ public class PlayerService {
     @Autowired
     private Converter converter;
 
-    //TODO: CHECK IF USERID MUST BE IN PLAYER DTO
     public PlayerDTO addPlayer(String name) {
         Player player = new Player();
         player.setName(name == null || name.isEmpty() ? "UNKNOWN" : name);

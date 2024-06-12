@@ -22,6 +22,5 @@ public class Player {
     private String name;
     private LocalDateTime registrationDate;
     private List<Game> gamesList;
-    private String userId;
 
 }
