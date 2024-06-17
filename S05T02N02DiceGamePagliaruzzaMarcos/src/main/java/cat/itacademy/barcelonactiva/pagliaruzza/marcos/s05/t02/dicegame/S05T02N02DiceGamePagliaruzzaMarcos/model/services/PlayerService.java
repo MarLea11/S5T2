@@ -1,14 +1,17 @@
 package cat.itacademy.barcelonactiva.pagliaruzza.marcos.s05.t02.dicegame.S05T02N02DiceGamePagliaruzzaMarcos.model.services;
 
 import cat.itacademy.barcelonactiva.pagliaruzza.marcos.s05.t02.dicegame.S05T02N02DiceGamePagliaruzzaMarcos.model.domain.Player;
+import cat.itacademy.barcelonactiva.pagliaruzza.marcos.s05.t02.dicegame.S05T02N02DiceGamePagliaruzzaMarcos.model.domain.User;
 import cat.itacademy.barcelonactiva.pagliaruzza.marcos.s05.t02.dicegame.S05T02N02DiceGamePagliaruzzaMarcos.model.dto.PlayerDTO;
 import cat.itacademy.barcelonactiva.pagliaruzza.marcos.s05.t02.dicegame.S05T02N02DiceGamePagliaruzzaMarcos.model.exceptions.PlayerNotFoundException;
 import cat.itacademy.barcelonactiva.pagliaruzza.marcos.s05.t02.dicegame.S05T02N02DiceGamePagliaruzzaMarcos.model.exceptions.RankedPlayerNotFoundException;
+import cat.itacademy.barcelonactiva.pagliaruzza.marcos.s05.t02.dicegame.S05T02N02DiceGamePagliaruzzaMarcos.model.exceptions.UserNotFoundException;
 import cat.itacademy.barcelonactiva.pagliaruzza.marcos.s05.t02.dicegame.S05T02N02DiceGamePagliaruzzaMarcos.model.repository.GameRepository;
 import cat.itacademy.barcelonactiva.pagliaruzza.marcos.s05.t02.dicegame.S05T02N02DiceGamePagliaruzzaMarcos.model.repository.PlayerRepository;
 import cat.itacademy.barcelonactiva.pagliaruzza.marcos.s05.t02.dicegame.S05T02N02DiceGamePagliaruzzaMarcos.model.repository.UserRepository;
 import cat.itacademy.barcelonactiva.pagliaruzza.marcos.s05.t02.dicegame.S05T02N02DiceGamePagliaruzzaMarcos.utils.Converter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,20 +31,29 @@ public class PlayerService {
     @Autowired
     private Converter converter;
 
-    public PlayerDTO addPlayer(String name) {
+    public PlayerDTO addPlayer(String name, String email) {
+        Optional<User> optionalUser = userRepository.findUserByEmail(email);
+        if(optionalUser.isEmpty()) {
+            throw new UserNotFoundException("User not found with email: " + email);
+        }
+        User user = optionalUser.get();
         Player player = new Player();
         player.setName(name == null || name.isEmpty() ? "UNKNOWN" : name);
         player.setRegistrationDate(LocalDateTime.now());
         player.setGamesList(new ArrayList<>());
+        player.setUserId(user.getId());
         Player newPlayer = playerRepository.save(player);
         return converter.toPlayerDTO(newPlayer);
     }
 
-    public PlayerDTO updatePlayer(String id, String name) {
+    public PlayerDTO updatePlayer(String id, String name, Long userId) {
         Optional<Player> optionalPlayer = playerRepository.findById(id);
         Player updatedPlayer;
         if(optionalPlayer.isPresent()) {
             Player player = optionalPlayer.get();
+            if(!player.getUserId().equals(userId)) {
+                throw new PlayerNotFoundException(id);
+            }
             player.setName(name);
             updatedPlayer = playerRepository.save(player);
         } else {
@@ -50,8 +62,8 @@ public class PlayerService {
         return converter.toPlayerDTO(updatedPlayer);
     }
 
-    public List<PlayerDTO> getAllPlayers() {
-        List<Player> players = playerRepository.findAll();
+    public List<PlayerDTO> getAllPlayers(Long userId) {
+        List<Player> players = playerRepository.findAllByUserId(userId);
         return players.stream()
                 .map(player -> {
                     PlayerDTO playerDTO = converter.toPlayerDTO(player);

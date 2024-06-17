@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,10 +24,10 @@ public class GameController {
 
     @Operation(summary = "Creates a new game", description = "Creates a new game for a specific player.")
     @PostMapping("/{id}/games")
-    public ResponseEntity<?> createGame(@PathVariable String id) {
+    public ResponseEntity<?> createGame(@PathVariable String id, Authentication authentication) {
         ResponseEntity<?> responseEntity;
         try {
-            Game game = gameService.createGame(id);
+            Game game = gameService.createGame(id, authentication);
             responseEntity = new ResponseEntity<>(game, HttpStatus.CREATED);
         }catch(PlayerNotFoundException e) {
             responseEntity = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -38,10 +39,10 @@ public class GameController {
 
     @Operation(summary = "Delete games", description = "Deletes all the games played by a specific player.")
     @DeleteMapping("/{id}/games")
-    public ResponseEntity<String> deleteGame(@PathVariable String id) {
+    public ResponseEntity<String> deleteGame(@PathVariable String id, Authentication authentication) {
         ResponseEntity<String> responseEntity;
         try {
-            gameService.deleteGame(id);
+            gameService.deleteGame(id, authentication);
             responseEntity = new ResponseEntity<>("Games of the user " + id + "deleted successfully.", HttpStatus.NO_CONTENT);
         }catch(PlayerNotFoundException e) {
             responseEntity = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -51,12 +52,12 @@ public class GameController {
         return responseEntity;
     }
 
-    @Operation(summary = "Get all the games", description = "Retrieve a list of all the games.")
+    @Operation(summary = "Get all the games", description = "Retrieve a list of all the games of one player.")
     @GetMapping("/{id}/games")
-    public ResponseEntity<?> getAllGames(@PathVariable String id) {
+    public ResponseEntity<?> getAllGames(@PathVariable String id, Authentication authentication) {
         ResponseEntity<?> responseEntity;
         try {
-            List<Game> games = gameService.getAllGames(id);
+            List<Game> games = gameService.getAllGames(id, authentication);
             responseEntity = new ResponseEntity<>(games, HttpStatus.OK);
         }catch(PlayerNotFoundException e) {
             responseEntity = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
